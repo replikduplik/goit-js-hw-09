@@ -1,6 +1,15 @@
 const form = document.querySelector('.feedback-form');
 let formData = { email: '', message: '' };
 
+// Sayfa yüklendiğinde verileri kontrol et
+const savedData = localStorage.getItem('feedback-form-state');
+if (savedData) {
+  Object.assign(formData, JSON.parse(savedData));
+  if (form.elements.email) form.elements.email.value = formData.email || '';
+  if (form.elements.message)
+    form.elements.message.value = formData.message || '';
+}
+
 //Local Storage input event
 form.addEventListener('input', event => {
   event.preventDefault();
@@ -13,14 +22,6 @@ form.addEventListener('input', event => {
   localStorage.setItem('feedback-form-state', JSON.stringify(formData));
 });
 
-// Sayfa yüklendiğinde verileri kontrol et
-const savedData = localStorage.getItem('feedback-form-state');
-if (savedData) {
-  Object.assign(formData, JSON.parse(savedData));
-  if (form.elements.email) form.elements.email.value = formData.email || '';
-  if (form.elements.message)
-    form.elements.message.value = formData.message || '';
-}
 
 //Submit event
 form.addEventListener('submit', event => {
@@ -33,6 +34,10 @@ form.addEventListener('submit', event => {
     localStorage.removeItem('feedback-form-state');
     return;
   }
+  // Gönderilen veriyi konsola yazdır
+  console.log(formData);
+  // localStorage'dan veriyi sil
+  localStorage.removeItem('feedback-form-state');
   form.reset();
   formData = { email: '', message: '' };
 });
